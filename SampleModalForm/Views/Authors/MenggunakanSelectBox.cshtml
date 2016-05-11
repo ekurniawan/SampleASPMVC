@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "MenggunakanSelectBox";
+}
+
+@section styles{
+    @Styles.Render("~/Content/select2")
+}
+
+<h2>Menggunakan Select Box</h2>
+
+<select class="js-example-data-array"></select>
+
+
+@section scripts{
+    @Scripts.Render("~/bundles/select2")
+    <script type="text/javascript">
+        var url = "http://localhost:51268/Authors/GetAuthorSelect";
+        $.getJSON(url, function (result) {
+            if (result) {
+                var data = result;
+                $(".js-example-data-array").select2({
+                    data: data
+                });
+            }
+        });
+    </script>
+}
+

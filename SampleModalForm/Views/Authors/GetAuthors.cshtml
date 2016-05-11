@@ -1,0 +1,115 @@
+﻿
+@{
+    ViewBag.Title = "Get Authors";
+}
+
+
+
+
+<h2>Get Authors</h2>
+
+<input type="text" id="txtResult" />
+<button type="button" class="btn btn-info" id="btnModal" data-toggle="modal" data-target="#myModal">Open Modal</button>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Search Author</h4>
+                Masukan Nama : <input type="text" id="txtNama" />
+                <button id="btnSearch" class="btn btn-info">Search</button><br />
+            </div>
+            <div class="modal-body">
+                
+                <table id="tblAuthor" class="table table-bordered table-hover">
+                    <tr>
+                        <th>Author ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                    </tr>
+                    <tr>
+
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            function GetData() {
+                var url = "http://localhost:51268/Authors/GetAuthorsData";
+                var idEdit = "";
+                $("#tblAuthor").find("tr:gt(0)").remove();
+                $.getJSON(url, function (result) {
+                    if (result) {
+                        var data = result;
+                        var row = "";
+                        $.each(data, function (key, value) {
+                            row += InsertRow(value);
+                        });
+                        $("#tblAuthor").append(row);
+                    }
+                });
+            }
+
+            function SearchData() {
+                console.log($("#txtNama").val());
+                var url = "http://localhost:51268/Authors/SearchByName?txtNama=" + $("#txtNama").val();
+                console.log(url);
+                //$("#tblAuthor").empty();
+                $("#tblAuthor").find("tr:gt(0)").remove();
+                $.getJSON(url, function (result) {
+                    if (result) {
+                        var data = result;
+                        var row = "";
+                        $.each(data, function (key, value) {
+                            row += InsertRow(value);
+                        });
+                        $("#tblAuthor").append(row);
+                    }
+                });
+            }
+
+            function InsertRow(data) {
+                var newRow = "";
+                newRow += "<tr>";
+                newRow += "<td>" + data.AuthorID + "</td>";
+                newRow += "<td>" + data.FirstName + "</td>";
+                newRow += "<td>" + data.LastName + "</td>";
+                newRow += "</tr>";
+                return newRow;
+            }
+
+            $("#btnSearch").click(function () {
+                SearchData();
+            });
+
+            $("#btnModal").click(function () {
+                GetData();
+            });
+
+            $("#tblAuthor").on("click", "tr", function () {
+                //var myTr = $(this).closest("td");
+                console.log($(this).find("td").eq(0).text());
+                var firstname = $(this).find("td").eq(1).text();
+
+                $("#txtResult").val(firstname);
+                $("#myModal").modal('toggle');
+            });
+
+        });
+    </script>
+
+}
+
