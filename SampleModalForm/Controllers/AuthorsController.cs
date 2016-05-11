@@ -17,6 +17,7 @@ namespace SampleModalForm.Controllers
             return View();
         }
 
+        //contoh menggunakan modal form
         public JsonResult GetAuthorsData()
         {
             var results = from r in db.Authors
